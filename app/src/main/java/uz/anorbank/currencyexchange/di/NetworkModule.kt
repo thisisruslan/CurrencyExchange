@@ -40,7 +40,7 @@ class NetworkModule {
     @[Provides Singleton]
     fun getOkHttpClient(@ApplicationContext context: Context): OkHttpClient =
         OkHttpClient.Builder()
-            .addLoggingInterceptor(context)
+//            .addLoggingInterceptor(context)
             .connectTimeout(timeout = timeOut, TimeUnit.SECONDS)
             .readTimeout(timeout = timeOut, TimeUnit.SECONDS)
             .writeTimeout(timeout = timeOut, TimeUnit.SECONDS)

@@ -20,13 +20,12 @@ class MainFragmentVMImpl @Inject constructor(
 
     override val loading = MutableLiveData<Boolean>()
 
-
     override val successGetAnorBankDataLD = MutableLiveData<AnorBankData>()
     override val errorGetAnorBankDataLD = MutableLiveData<String>()
     override fun getAnorBankData() {
-
         loading.value = true
         mainRepository.getAnorBankData().onEach { result ->
+            loading.value = false
             result.onSuccess {
                 successGetAnorBankDataLD.value = it
             }
@@ -38,24 +37,6 @@ class MainFragmentVMImpl @Inject constructor(
             errorGetAnorBankDataLD.value = it.message
         }.launchIn(viewModelScope)
 
-    }
-
-    override val successGetCentralBankDataLD = MutableLiveData<List<CentralBankData>>()
-    override val errorGetCentralBankDataLD = MutableLiveData<String>()
-    override fun getCentralBankData() {
-
-        loading.value = true
-        mainRepository.getCentralBankData().onEach { result ->
-            result.onSuccess {
-                successGetCentralBankDataLD.value = it
-            }
-            result.onFailure {
-                errorGetCentralBankDataLD.value = it.message
-            }
-        }.catch {
-            loading.value = false
-            errorGetCentralBankDataLD.value = it.message
-        }.launchIn(viewModelScope)
     }
 
     override val getLoadedTimeLD = MutableLiveData<String>()

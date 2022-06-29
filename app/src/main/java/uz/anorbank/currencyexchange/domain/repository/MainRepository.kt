@@ -7,6 +7,5 @@ import uz.anorbank.currencyexchange.data.remote.dataclasses.CentralBankData
 
 interface MainRepository  {
     fun getAnorBankData() : Flow<Result<AnorBankData>>
-    fun getCentralBankData() : Flow<Result<List<CentralBankData>>>
     fun getLoadedTime() : Flow<String>
 }

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -23,21 +24,20 @@ import xyz.teamgravity.checkinternet.CheckInternet
 class MainFragment : Fragment(R.layout.fragment_main) {
     private val binding by viewBinding(FragmentMainBinding::bind)
     private val viewModel: MainFragmentVM by viewModels<MainFragmentVMImpl>()
-    lateinit var nameViews: Array<AppCompatTextView>
-    lateinit var sellRateViews: Array<AppCompatTextView>
-    lateinit var buyRateViews: Array<AppCompatTextView>
-    lateinit var cbRateViews: Array<AppCompatTextView>
-    lateinit var flagViews: Array<AppCompatImageView>
+    private lateinit var nameViews: Array<AppCompatTextView>
+    private lateinit var sellRateViews: Array<AppCompatTextView>
+    private lateinit var buyRateViews: Array<AppCompatTextView>
+    private lateinit var cbRateViews: Array<AppCompatTextView>
+    private lateinit var flagViews: Array<AppCompatImageView>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setObservers()
         initValues()
         setListeners()
         viewModel.getAnorBankData()
-        viewModel.getCentralBankData()
         viewModel.getLoadedTime()
         CheckInternet().check { connected ->
-            if (!connected) showToast("Интернет не подключен")
+            if (!connected) showToast("Интернет не подключен!")
         }
     }
 
@@ -52,7 +52,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private fun setListeners() {
         binding.reload.setOnRefreshListener {
             viewModel.getAnorBankData()
-            viewModel.getCentralBankData()
             viewModel.getLoadedTime()
         }
     }
@@ -68,14 +67,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             showToast(it)
         }
 
-        successGetCentralBankDataLD.observe(viewLifecycleOwner) {
-            binding.reload.isRefreshing = false
-        }
-
-        errorGetCentralBankDataLD.observe(viewLifecycleOwner) {
-            binding.reload.isRefreshing = false
-            showToast(it)
-        }
+        loading.observe(viewLifecycleOwner) { binding.loading.isVisible = it }
 
         getLoadedTimeLD.observe(viewLifecycleOwner) {
             binding.tvTime.text = Html.fromHtml("Обновлено $it", HtmlCompat.FROM_HTML_MODE_LEGACY)

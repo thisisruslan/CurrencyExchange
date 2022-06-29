@@ -33,18 +33,6 @@ class MainRepositoryImpl @Inject constructor(
         }
     }.flowOn(IO)
 
-    override fun getCentralBankData(): Flow<Result<List<CentralBankData>>> = flow {
-        val response = api.getCentralBankCurrencyRates(CENTRALBANK_URL)
-        if (response.isSuccessful) {
-            emit(Result.success(response.body()!!))
-        } else {
-            var str = "Error"
-            response.errorBody()?.let {
-                str = gson.fromJson(it.string(), ErrorResponse::class.java).message
-            }
-            emit(Result.failure(Throwable(str)))
-        }
-    }.flowOn(IO)
 
     override fun getLoadedTime(): Flow<String> = flow {
         val time: Date = Calendar.getInstance().time

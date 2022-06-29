@@ -11,9 +11,7 @@ interface MainFragmentVM {
     val errorGetAnorBankDataLD: LiveData<String>
     fun getAnorBankData()
 
-    val successGetCentralBankDataLD: LiveData<List<CentralBankData>>
-    val errorGetCentralBankDataLD: LiveData<String>
-    fun getCentralBankData()
+
 
     val getLoadedTimeLD: LiveData<String>
     fun getLoadedTime()
